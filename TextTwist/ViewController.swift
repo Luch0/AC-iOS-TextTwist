@@ -23,19 +23,30 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         guessTextField.delegate = self
-        lettersLabel.text = ttm.getLetters()
+        lettersLabel.text = ttm.getLettersCopy()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let textInField = textField.text else {
             return false
         }
-        if ttm.getWords().contains(textInField){
+        if ttm.getWordsCopy().contains(textInField){
             messageLabel.text = "YES"
             addToAppropiateTV(word: textInField)
             ttm.removeWordFound(word: textInField)
         } else {
             messageLabel.text = "NO"
+        }
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string == "" {
+            return true
+        }
+        let lettersAsArray: [Character] = Array(ttm.getLettersCopy())
+        if !lettersAsArray.contains(Character(string)) {
+            return false
         }
         return true
     }
