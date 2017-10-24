@@ -33,7 +33,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if ttm.getWordsCopy().contains(textInField){
             messageLabel.text = "YES"
             addToAppropiateTV(word: textInField)
-            ttm.removeWordFound(word: textInField)
+            ttm.removeWordFoundFromCopyArray(word: textInField)
         } else {
             messageLabel.text = "NO"
         }
@@ -44,10 +44,21 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if string == "" {
             return true
         }
-        let lettersAsArray: [Character] = Array(ttm.getLettersCopy())
+        var lettersAsArray: [Character] = Array(ttm.getLettersCopy())
         if !lettersAsArray.contains(Character(string)) {
             return false
         }
+        for i in 0..<lettersAsArray.count {
+            if String(lettersAsArray[i]) == string {
+                lettersAsArray.remove(at: i)
+                break
+            }
+        }
+        print(string)
+        print(lettersAsArray)
+        ttm.copyLetters = String(lettersAsArray)
+        lettersLabel.text = ttm.getLettersCopy()
+        print(ttm.getLettersCopy())
         return true
     }
     

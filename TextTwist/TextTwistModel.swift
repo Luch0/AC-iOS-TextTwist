@@ -25,7 +25,7 @@ class TextTwistModel {
         return chosenWordData.wordCount
     }
     func getLettersCopy() -> String {
-        return chosenWordData.letters
+        return copyLetters
     }
     func getWordsCopy() -> [String] {
         return copyArrayWords
@@ -34,7 +34,7 @@ class TextTwistModel {
         return chosenWordData.letters
     }
     func getWordsOriginal() -> [String] {
-        return copyArrayWords
+        return chosenWordData.words
     }
     
     func removeWordFoundFromCopyArray(word: String) {
