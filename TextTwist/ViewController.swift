@@ -24,16 +24,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         guessTextField.delegate = self
         lettersLabel.text = ttm.getLettersCopy()
+        messageLabel.isHidden = true
+        threeWordTV.isUserInteractionEnabled = false
+        fourWordTV.isUserInteractionEnabled = false
+        fiveWordTV.isUserInteractionEnabled = false
+        sixWordTV.isUserInteractionEnabled = false
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let textInField = textField.text else {
             return false
         }
-        if ttm.getWordsCopy().contains(textInField){
-            messageLabel.text = "YES"
-            addToAppropiateTV(word: textInField)
-            ttm.removeWordFoundFromCopyArray(word: textInField)
+        messageLabel.isHidden = false
+        if ttm.getWordsOriginal().contains(textInField){
+            if ttm.getWordsOriginal().contains(textInField) && !ttm.getWordsCopy().contains(textInField) {
+                messageLabel.text = "Already guessed that word"
+            } else {
+                messageLabel.text = "YES"
+                addToAppropiateTV(word: textInField)
+                ttm.removeWordFoundFromCopyArray(word: textInField)
+                lettersLabel.text = ttm.getLettersOriginal()
+                ttm.setLettersCopy(setLetters: ttm.getLettersOriginal())
+                textField.text = ""
+            }
         } else {
             messageLabel.text = "NO"
         }
@@ -42,6 +55,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string == "" {
+//            guard let lastCharacter = textField.text?.last?.description else {
+//                return false
+//            }
+//            ttm.setLettersCopy(setLetters: ttm.getLettersCopy() + lastCharacter)
+//            lettersLabel.text = ttm.getLettersCopy()
+            
+//            let textFieldString: String = (textField.text?.description)!
+//            for i in range.lowerBound..<range.upperBound {
+//                ttm.setLettersCopy(setLetters: ttm.getLettersCopy() + String(textFieldString[textFieldString.index(textFieldString.startIndex, offsetBy: i)]))
+//            }
             return true
         }
         var lettersAsArray: [Character] = Array(ttm.getLettersCopy())
@@ -54,11 +77,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 break
             }
         }
-        print(string)
-        print(lettersAsArray)
-        ttm.copyLetters = String(lettersAsArray)
+        ttm.setLettersCopy(setLetters: String(lettersAsArray))
         lettersLabel.text = ttm.getLettersCopy()
-        print(ttm.getLettersCopy())
         return true
     }
     
@@ -74,9 +94,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         case 5:
             content = fiveWordTV.text + "\n" + word
             fiveWordTV.text = content
-        default:
+        case 6:
             content = sixWordTV.text + "\n" + word
             sixWordTV.text = content
+        default:
+            print("Something went wrong")
         }
     }
 

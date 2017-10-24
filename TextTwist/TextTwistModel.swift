@@ -36,7 +36,9 @@ class TextTwistModel {
     func getWordsOriginal() -> [String] {
         return chosenWordData.words
     }
-    
+    func setLettersCopy(setLetters: String) {
+        self.copyLetters = setLetters
+    }
     func removeWordFoundFromCopyArray(word: String) {
         copyArrayWords = copyArrayWords.filter{$0 != word}
     }
