@@ -24,11 +24,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         guessTextField.delegate = self
         lettersLabel.text = ttm.getLettersCopy()
-        messageLabel.isHidden = true
-        threeWordTV.isUserInteractionEnabled = false
-        fourWordTV.isUserInteractionEnabled = false
-        fiveWordTV.isUserInteractionEnabled = false
-        sixWordTV.isUserInteractionEnabled = false
+        threeWordTV.isEditable = false
+        fourWordTV.isEditable = false
+        fiveWordTV.isEditable = false
+        sixWordTV.isEditable = false
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -38,9 +37,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         messageLabel.isHidden = false
         if ttm.getWordsOriginal().contains(textInField){
             if ttm.getWordsOriginal().contains(textInField) && !ttm.getWordsCopy().contains(textInField) {
-                messageLabel.text = "Already guessed that word"
+                messageLabel.text = "Already guessed the word \(textInField)"
             } else {
-                messageLabel.text = "YES"
+                messageLabel.text = "Word found!"
                 addToAppropiateTV(word: textInField)
                 ttm.removeWordFoundFromCopyArray(word: textInField)
                 lettersLabel.text = ttm.getLettersOriginal()
@@ -48,36 +47,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 textField.text = ""
             }
         } else {
-            messageLabel.text = "NO"
+            messageLabel.text = "Can't add \(textInField)"
         }
         return true
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string == "" {
-//            guard let lastCharacter = textField.text?.last?.description else {
-//                return false
-//            }
-//            ttm.setLettersCopy(setLetters: ttm.getLettersCopy() + lastCharacter)
-//            lettersLabel.text = ttm.getLettersCopy()
-            
-//            let textFieldString: String = (textField.text?.description)!
-//            for i in range.lowerBound..<range.upperBound {
-//                ttm.setLettersCopy(setLetters: ttm.getLettersCopy() + String(textFieldString[textFieldString.index(textFieldString.startIndex, offsetBy: i)]))
-//            }
+            let textFieldString: String = (textField.text?.description)!
+            for i in range.lowerBound..<range.upperBound {
+                ttm.setLettersCopy(setLetters: ttm.getLettersCopy() + String(textFieldString[textFieldString.index(textFieldString.startIndex, offsetBy: i)]))
+            }
+            lettersLabel.text = ttm.getLettersCopy()
             return true
         }
-        var lettersAsArray: [Character] = Array(ttm.getLettersCopy())
+        let lettersAsArray: [Character] = Array(ttm.getLettersCopy())
         if !lettersAsArray.contains(Character(string)) {
             return false
         }
-        for i in 0..<lettersAsArray.count {
-            if String(lettersAsArray[i]) == string {
-                lettersAsArray.remove(at: i)
-                break
-            }
-        }
-        ttm.setLettersCopy(setLetters: String(lettersAsArray))
+        ttm.removeLetterFromLettersCopy(letter: string)
         lettersLabel.text = ttm.getLettersCopy()
         return true
     }
@@ -86,16 +74,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         var content: String
         switch word.count {
         case 3:
-            content = threeWordTV.text + "\n" + word
+            content = threeWordTV.text + word + "\n"
             threeWordTV.text = content
         case 4:
-            content = fourWordTV.text + "\n" + word
+            content = fourWordTV.text + word + "\n"
             fourWordTV.text = content
         case 5:
-            content = fiveWordTV.text + "\n" + word
+            content = fiveWordTV.text + word + "\n"
             fiveWordTV.text = content
         case 6:
-            content = sixWordTV.text + "\n" + word
+            content = sixWordTV.text + word + "\n"
             sixWordTV.text = content
         default:
             print("Something went wrong")
